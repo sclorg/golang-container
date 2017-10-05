@@ -1,0 +1,4 @@
+This is a go-toolset-7 base image.
+
+Sample invocation:
+docker run -ti go-toolset-7-rhel7 /bin/bash

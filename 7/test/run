@@ -1,0 +1,131 @@
+#!/bin/bash
+#
+# The 'run' script performs simple tests that verifies usability
+# of tools, packaged in toolchain image.
+#
+# IMAGE_NAME specifies a name of the candidate image used for testing.
+# The image has to be available before this script is executed.
+#
+# DEBUG environment variable, if not empty, makes 'run' to log every step
+# of testing.
+#
+
+if [ "$DEBUG" != "" ]; then
+  set -x
+fi
+
+IMAGE_NAME=${IMAGE_NAME:-rhscl-tech-preview/go-toolset-7-rhel7}
+THISDIR=$(dirname ${BASH_SOURCE[0]})
+
+function info () {
+    echo -e "\e[1m[INFO] $@\e[0m"
+}
+
+function pass () {
+    echo -e "\e[1;32m[PASS] $@\e[0m"
+}
+
+function error () {
+    echo -e "\e[1;31m[ERROR] $@\e[0m"
+}
+
+function check_result() {
+    local label="$1"
+    local result="$2"
+    local expected="$3"
+
+    if [[ "$result" = "$expected" ]]; then
+        pass "$label: PASS"
+    else
+        error "$label: FAIL ($result)"
+        RESULT=1
+    fi
+}
+
+function test_docker_run_usage () {
+  info "Testing 'docker run' usage ..."
+
+  docker run --rm $IMAGE_NAME > $TMPDIR/actual-usage
+  check_result "Exit code is zero" $? 0
+
+  diff "$THISDIR"/expected-usage $TMPDIR/actual-usage &> /dev/null
+  check_result "Usage info matches the expected text" $? 0
+}
+
+function test_sanity_go_usage () {
+  info "Testing 'go -v' usage ..."
+
+  docker run --rm $IMAGE_NAME go version &> $TMPDIR/actual-go-version
+  check_result "Exit code is zero" $? 0
+
+  grep 'go version go1.8\.3 linux/amd64' $TMPDIR/actual-go-version &> /dev/null
+  check_result "Output contains go version" $? 0
+}
+
+function test_go_run () {
+  info "Testing running go program via 'docker run go run foo.go ..."
+
+  rm -f $TMPDIR/foo $TMPDIR/foo.go
+
+  cat << EOF > $TMPDIR/foo.go
+package main
+
+import "fmt"
+
+func main() {
+    fmt.Println("Hello world from containerized go!")
+}
+EOF
+
+  docker run --rm -v $TMPDIR:$TMPDIR:z $IMAGE_NAME go run $TMPDIR/foo.go &> $TMPDIR/actual-output
+  check_result "Exit code is zero" $? 0
+
+  grep "Hello world from containerized go!" $TMPDIR/actual-output &> /dev/null
+  check_result "Running source works" $? 0
+}
+
+function test_go_build () {
+  info "Testing building go program via 'docker run go build foo.go ..."
+
+  rm -f $TMPDIR/foo $TMPDIR/foo.go
+
+  cat << EOF > $TMPDIR/foo.go
+package main
+
+import "fmt"
+
+func main() {
+    fmt.Println("Hello world from containerized go!")
+}
+EOF
+
+  docker run --rm -v $TMPDIR:$TMPDIR:z $IMAGE_NAME go build -o $TMPDIR/foo $TMPDIR/foo.go &> /dev/null
+  check_result "Exit code is zero" $? 0
+
+  test -e $TMPDIR/foo
+  check_result "Compiled binary exists" $? 0
+
+  $TMPDIR/foo &> $TMPDIR/actual-output
+
+  grep "Hello world from containerized go!" $TMPDIR/actual-output &> /dev/null
+  check_result "Running binary works" $? 0
+}
+
+TMPDIR=`mktemp -d`
+chmod a+rwx $TMPDIR
+
+RESULT=0
+
+test_docker_run_usage
+test_sanity_go_usage
+test_go_run
+test_go_build
+
+rm -rf $TMPDIR
+
+if [ "$RESULT" = "0" ]; then
+    info "All tests finished"
+else
+    error "Some tests failed"
+    exit $RESULT
+fi
