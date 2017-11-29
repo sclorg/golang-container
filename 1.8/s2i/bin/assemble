@@ -1,0 +1,67 @@
+#!/bin/bash
+
+set -e
+
+pushd /tmp/src
+
+if [[ `go list -f {{.Incomplete}}` == "true" ]]; then
+
+    if [[ ! -z "$IMPORT_URL" ]]; then
+
+        popd
+
+        echo "Assembling GOPATH"
+
+        export GOPATH=`realpath $HOME/go`
+
+        mkdir -p $GOPATH/src/$IMPORT_URL
+
+        mv /tmp/src/* $GOPATH/src/$IMPORT_URL
+
+        if [[ -d /tmp/artifacts/pkg ]]; then
+
+            echo "Restoring previous build artifacts"
+
+            mv /tmp/artifacts/pkg $GOPATH
+
+        fi
+
+        # Resolve dependencies, ignore if vendor present
+
+        if [[ ! -d $GOPATH/src/$IMPORT_URL/vendor ]]; then
+
+            echo "Resolving dependencies"
+
+            pushd $GOPATH/src/$IMPORT_URL
+
+            go get
+
+            popd
+
+        fi
+
+        # lets build
+
+        pushd $GOPATH/src/$IMPORT_URL
+
+        echo "Building"
+
+        go install $IMPORT_URL
+
+        mv $GOPATH/bin/* /opt/app-root/gobinary
+
+        popd
+
+        exit
+
+    fi
+
+    exec /$STI_SCRIPTS_PATH/usage
+
+else
+
+    go build -o /opt/app-root/gobinary
+
+    popd
+
+fi
