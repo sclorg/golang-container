@@ -23,3 +23,14 @@ s2i build -e IMPORT_URL='github.com/cpuguy83/go-md2man' ./src centos/golang-1.8-
 where ./src directory contains git repository with golang application(in this case github.com/cpuguy83/go-md2man) that has complete or incomplete dependencies. You can use incremental build in this case.
 
 Both will build test-app application image.
+
+Environment variables
+---------------------
+
+To set these environment variables, you can place them as a key value pair into a `.s2i/environment`
+file inside your source code repository or specified via s2i invocation.
+
+
+* **IMPORT_URL**
+
+    Used to specifie the golang application import URL(i.e usualy something like github.com/someorg/somerepo), that is build. Nacesary for the incremental build to function.

@@ -28,5 +28,5 @@ Usage
 ---------------------------------
 
 For information about usage of Dockerfile for Golang Toolset 7,
-see [usage documentation](7/README.md).
+see [usage documentation](1.8/README.md).
 

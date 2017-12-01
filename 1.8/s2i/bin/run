@@ -2,4 +2,4 @@
 
 set -e
 
-exec /opt/app-root/gobinary $RUN_PARAMS
+exec /opt/app-root/gobinary

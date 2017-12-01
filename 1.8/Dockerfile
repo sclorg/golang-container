@@ -16,9 +16,10 @@ LABEL summary="$SUMMARY" \
       io.k8s.display-name="Go $VERSION" \
       io.openshift.tags="builder,golang,golang18,rh-golang18,go" \
       com.redhat.component="go-toolset-7" \
-      name="centos/golang-1.8-centos7" \
+      name="centos/golang-18-centos7" \
       version="1" \
-      maintainer="Jakub Čajka <jcajka@redhat.com>"
+      maintainer="Jakub Čajka <jcajka@redhat.com>" \
+      usage="docker run centos/golang-18-centos7"
 
 RUN yum install -y centos-release-scl-rh && \
     yum-config-manager --enable centos-sclo-rh-testing && \
@@ -27,14 +28,12 @@ RUN yum install -y centos-release-scl-rh && \
     rpm -V $INSTALL_PKGS && \
     yum clean all -y
 
-RUN echo $STI_SCRIPTS_PATH
-
 # Copy the S2I scripts from the specific language image to $STI_SCRIPTS_PATH.
 COPY ./s2i/bin/ $STI_SCRIPTS_PATH
 
 COPY ./root/ /
 
-RUN chown -R 1001:0 $STI_SCRIPTS_PATH && chown -R 1001:0 /opt/app-root
+RUN chown -R 1001:0 $STI_SCRIPTS_PATH && chown -R 1001:0 $APP_ROOT
 
 USER 1001
 
