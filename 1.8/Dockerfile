@@ -18,7 +18,7 @@ LABEL summary="$SUMMARY" \
       name="centos/go-toolset-7-centos7" \
       version="1" \
       maintainer="Jakub Čajka <jcajka@redhat.com>" \
-      usage="docker run centos/golang-18-centos7"
+      usage="docker run centos/go-toolset-7-centos7"
 
 RUN yum install -y centos-release-scl-rh && \
     yum-config-manager --enable centos-sclo-rh-testing && \
