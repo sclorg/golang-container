@@ -1,0 +1,14 @@
+#!/bin/bash
+
+DISTRO=`cat /etc/*-release | grep ^ID= | tr "=" "\n" | grep -v ^ID | grep -o '\w*'`
+NAMESPACE=centos
+[[ $DISTRO =~ rhel* ]] && NAMESPACE=rhscl
+
+cat <<EOF
+This is a S2I golang-1.8 ${DISTRO} base image:
+To use it, install S2I: https://github.com/openshift/source-to-image
+Sample invocation:
+s2i build -e IMPORT_URL='github.com/cpuguy83/go-md2man' git://github.com/cpuguy83/go-md2man ${NAMESPACE}/golang-1.8-${DISTRO} go-sample-app
+You can then run the resulting image via:
+docker run go-sample-app
+EOF

@@ -3,7 +3,7 @@ Golang Docker images
 
 This repository contains the source for building of
 the Golang application as a reproducible Docker image using.
-Users can choose between RHEL and CentOS based builder images.
+Users can choose between Fedora, RHEL and CentOS based builder images.
 The resulting image can be run using [Docker](http://docker.io).
 
 For more information about contributing, see
@@ -15,7 +15,7 @@ For more information about concepts used in these docker images, see the
 Versions
 ---------------
 Golang versions currently provided are:
-* [Golang 1.8 (Toolset 7)](7)
+* [Golang 1.8 (go-toolset 7, where applicable)](1.8)
 
 RHEL versions currently supported are:
 * RHEL7
@@ -28,5 +28,5 @@ Usage
 ---------------------------------
 
 For information about usage of Dockerfile for Golang Toolset 7,
-see [usage documentation](7/README.md).
+see [usage documentation](1.8/README.md).
 
