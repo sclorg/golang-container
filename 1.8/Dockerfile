@@ -1,8 +1,7 @@
 FROM centos/s2i-base-centos7
 
 ENV NAME=golang \
-    VERSION=1.8 \
-    SCL_PATH=/opt/rh/go-toolset-7/
+    VERSION=1.8 
 
 ENV SUMMARY="Platform for building and running Go $VERSION based applications" \
     DESCRIPTION="Go $VERSION available as docker container is a base platform for \

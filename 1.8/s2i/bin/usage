@@ -1,6 +1,6 @@
 #!/bin/bash
 
-DISTRO=`cat /etc/*-release | grep ^ID= | grep -Po '".*?"' | tr -d '"'`
+DISTRO=`cat /etc/*-release | grep ^ID= | tr "=" "\n" | grep -v ^ID | grep -o '\w*'`
 NAMESPACE=centos
 [[ $DISTRO =~ rhel* ]] && NAMESPACE=rhscl
 
