@@ -1,0 +1,2 @@
+#!/bin/bash
+s2i build --incremental -e IMPORT_URL='github.com/cpuguy83/go-md2man' ${s2i_args} file://./app ${IMAGE_NAME} ${IMAGE_NAME}-testapp

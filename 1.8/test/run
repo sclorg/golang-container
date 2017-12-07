@@ -37,6 +37,31 @@ run_s2i_build() {
   popd
 }
 
+incremental_test_clean_up(){
+  rm -f run1
+  rm -f run2
+}
+
+run_s2i_build_incremental(){
+  info "Building the ${1} application image using incremental build ..."
+
+  pushd ${test_dir}/${1} >/dev/null
+  ./s2i-build-incremental &>run1
+  ./s2i-build-incremental &>run2
+  if grep "Clean build will be performed because of error saving previous build artifacts" run2; then
+    info "Incremental build, artifact injection failed..."
+    exit 1
+  fi
+  if ! grep "Restoring previous build artifacts" run2; then
+    info "Incremental build, artifact restoration failed..."
+    exit 1
+  fi
+
+  incremental_test_clean_up
+
+  popd
+}
+
 prepare() {
   if ! image_exists ${IMAGE_NAME}; then
     echo "ERROR: The image ${IMAGE_NAME} must exist before this script is executed."
@@ -157,6 +182,9 @@ check_result $?
 for app in ${TEST_APPS[@]}; do
   prepare ${app}
   run_s2i_build ${app}
+  if [ -e ${test_dir}/${app}/s2i-build-incremental ]; then
+    run_s2i_build_incremental ${app}
+  fi
   check_result $?
 
   # test application with default user
