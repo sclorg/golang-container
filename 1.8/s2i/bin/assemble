@@ -6,6 +6,12 @@ pushd /tmp/src
 
 if [[ `go list -f {{.Incomplete}}` == "true" ]]; then
 
+    if [[ -z "$INSTALL_URL" ]]; then
+
+        INSTALL_URL=$IMPORT_URL
+
+    fi
+
     if [[ ! -z "$IMPORT_URL" ]]; then
 
         popd
@@ -28,11 +34,11 @@ if [[ `go list -f {{.Incomplete}}` == "true" ]]; then
 
         # Resolve dependencies, ignore if vendor present
 
-        if [[ ! -d $GOPATH/src/$IMPORT_URL/vendor ]]; then
+        if [[ ! -d $GOPATH/src/$INSTALL_URL/vendor ]]; then
 
             echo "Resolving dependencies"
 
-            pushd $GOPATH/src/$IMPORT_URL
+            pushd $GOPATH/src/$INSTALL_URL
 
             go get
 
@@ -42,11 +48,11 @@ if [[ `go list -f {{.Incomplete}}` == "true" ]]; then
 
         # lets build
 
-        pushd $GOPATH/src/$IMPORT_URL
+        pushd $GOPATH/src/$INSTALL_URL
 
         echo "Building"
 
-        go install $IMPORT_URL
+        go install $INSTALL_URL
 
         mv $GOPATH/bin/* /opt/app-root/gobinary
 
