@@ -34,3 +34,7 @@ file inside your source code repository or specified via s2i invocation.
 * **IMPORT_URL**
 
     Used to specify the golang application import URL (i.e. usually something like github.com/someorg/somerepo), that is build. Necessary for the incremental build to function.
+
+* **INSTALL_URL**
+
+    Used to specify the golang application import URL of the main package (i.e. usually something like github.com/someorg/somerepo/subfolder). Necessary if the main package is not in the root folder of the repository.
