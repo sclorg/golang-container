@@ -6,11 +6,7 @@ pushd /tmp/src
 
 if [[ `go list -f {{.Incomplete}}` == "true" ]]; then
 
-    if [[ -z "$INSTALL_URL" ]]; then
-
-        INSTALL_URL=$IMPORT_URL
-
-    fi
+    INSTALL_URL=${INSTALL_URL:-$IMPORT_URL}
 
     if [[ ! -z "$IMPORT_URL" ]]; then
 
