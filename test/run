@@ -8,7 +8,7 @@
 #
 export IMAGE_NAME=${IMAGE_NAME:-centos/go-toolset-7-centos7}
 
-declare -a TEST_APPS=({simple,import-with-vendor,import-without-vendor}-app)
+declare -a TEST_APPS=({simple,import-with-vendor,import-without-vendor,complete}-app)
 
 # TODO: Make command compatible for Mac users
 test_dir="$(readlink -zf $(dirname "${BASH_SOURCE[0]}"))"
@@ -49,11 +49,16 @@ run_s2i_build_incremental(){
   ./s2i-build-incremental &>run1
   ./s2i-build-incremental &>run2
   if grep "Clean build will be performed because of error saving previous build artifacts" run2; then
+    cat run2
     info "Incremental build, artifact injection failed..."
     exit 1
   fi
   if ! grep "Restoring previous build artifacts" run2; then
     info "Incremental build, artifact restoration failed..."
+    info "s2i invocation outputs"
+    cat run1
+    echo "------"
+    cat run2
     exit 1
   fi
 
@@ -95,7 +100,10 @@ cleanup() {
   if image_exists ${IMAGE_NAME}-testapp; then
     docker rmi -f ${IMAGE_NAME}-testapp
   fi
-  rm -rf ${test_dir}/${1}/.git
+  info "Cleaning up the test repository"
+  if [ -d ${test_dir}/${1}/app/.git ]; then
+    rm -rf ${test_dir}/${1}/app/.git
+  fi
 }
 
 check_result() {
@@ -122,12 +130,12 @@ wait_for_cid() {
 
 test_s2i_usage() {
   info "Testing 's2i usage' ..."
-  s2i usage ${s2i_args} ${IMAGE_NAME} &>/dev/null
+  s2i usage ${s2i_args} ${IMAGE_NAME}
 }
 
 test_docker_run_usage() {
   info "Testing 'docker run' usage ..."
-  docker run ${IMAGE_NAME} &>/dev/null
+  docker run ${IMAGE_NAME}
 }
 
 test_scl_usage() {
@@ -161,7 +169,7 @@ test_application() {
   # Wait for the container to write it's CID file
   wait_for_cid
 
-  test_scl_usage "go version" "go version go1.8" "${cid_file}"
+  test_scl_usage "go version" "${EXPECTED_VER}" "${cid_file}"
   check_result $?
   cleanup_app
 }
@@ -169,9 +177,13 @@ test_application() {
 
 # Since we built the candidate image locally, we don't want S2I attempt to pull
 # it from Docker hub
-export s2i_args="--force-pull=false"
+export s2i_args="-p never --incremental-pull-policy=never"
+
+# determine what version of the Go are we testing base on the dir we are in
+export EXPECTED_VER="go`pwd | awk -F "/" '{print $(NF)}'`"
 
 # Verify the 'usage' script is working properly when running the base image with 's2i usage ...'
+info "Testing image ${IMAGE_NAME} with go version ${EXPECTED_VER} "
 test_s2i_usage
 check_result $?
 

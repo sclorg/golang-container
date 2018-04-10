@@ -4,7 +4,7 @@ set -e
 
 pushd /tmp/src
 
-if [[ `go list -f {{.Incomplete}}` == "true" || ! -z "$IMPORT_URL"  ]]; then
+if [[ `go list -f {{.Incomplete}}` == "true" || ! -z "$IMPORT_URL" ]]; then
 
     INSTALL_URL=${INSTALL_URL:-$IMPORT_URL}
 
@@ -20,11 +20,14 @@ if [[ `go list -f {{.Incomplete}}` == "true" || ! -z "$IMPORT_URL"  ]]; then
 
         mv /tmp/src/* $GOPATH/src/$IMPORT_URL
 
-        if [[ -d /tmp/artifacts/pkg ]]; then
+        if [[ -d /tmp/artifacts/pkg || -d /tmp/artifacts/go-build ]]; then
 
             echo "Restoring previous build artifacts"
 
             mv /tmp/artifacts/pkg $GOPATH
+            GOCACHE=`go env GOCACHE`
+            mkdir -p $GOCACHE
+            mv /tmp/artifacts/go-build $GOCACHE
 
         fi
 

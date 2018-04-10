@@ -16,6 +16,8 @@ Versions
 ---------------
 Golang versions currently provided are:
 * [Golang 1.8 (go-toolset 7, where applicable)](1.8)
+* [Golang 1.9](1.9)
+* [Golang 1.10](1.10)
 
 RHEL versions currently supported are:
 * RHEL7
@@ -23,10 +25,15 @@ RHEL versions currently supported are:
 CentOS versions currently supported are:
 * CentOS7
 
+Fedora versions currently supported are:
+* Fedora 26
+* Fedora 27
+* Fedora 28
+
 
 Usage
 ---------------------------------
 
-For information about usage of Dockerfile for Golang Toolset 7,
-see [usage documentation](1.8/README.md).
+For information about usage of Dockerfile for Golang Toolset 7 and Fedora golang,
+see usage documentation for respective Go versions [Go1.8](1.8/README.md) [Go1.9](1.9/README.md) [Go1.10](1.10/README.md).
 
