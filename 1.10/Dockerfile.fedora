@@ -1,7 +1,7 @@
-FROM registry.fedoraproject.org/f26/s2i-base:latest
+FROM registry.fedoraproject.org/f28/s2i-base:latest
 
 ENV NAME=golang \
-    VERSION=1.8 \
+    VERSION=1.10 \
     RELEASE=1 \
     ARCH=x86_64
 
