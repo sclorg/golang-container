@@ -1,8 +1,8 @@
-FROM rhscl/s2i-base-rhel7:1
+FROM centos/s2i-base-centos7
 
 ENV NAME=golang \
-    VERSION=1.8
- 
+    VERSION=1.10
+
 ENV SUMMARY="Platform for building and running Go $VERSION based applications" \
     DESCRIPTION="Go $VERSION available as docker container is a base platform for \
 building and running various Go $VERSION applications and frameworks. \
@@ -14,16 +14,14 @@ LABEL summary="$SUMMARY" \
       io.k8s.description="$DESCRIPTION" \
       io.k8s.display-name="Go $VERSION" \
       io.openshift.tags="builder,golang,golang18,rh-golang18,go" \
-      com.redhat.component="go-toolset-7-docker" \
-      name="devtools/go-toolset-7-rhel7" \
+      com.redhat.component="go-toolset-7" \
+      name="centos/go-toolset-7-centos7" \
       version="1" \
-      usage="docker run devtools/go-toolset-7-rhel7"
+      maintainer="Jakub Čajka <jcajka@redhat.com>" \
+      usage="docker run centos/go-toolset-7-centos7"
 
-RUN yum install -y yum-utils && \
-    yum-config-manager --disable \* &> /dev/null && \
-    yum-config-manager --enable rhel-7-server-devtools-rpms && \
-    yum-config-manager --enable rhel-7-server-rpms && \
-    yum-config-manager --enable rhel-7-server-optional-rpms && \
+RUN yum install -y centos-release-scl-rh && \
+    yum-config-manager --enable centos-sclo-rh-testing && \
     INSTALL_PKGS="go-toolset-7" && \
     yum install -y --setopt=tsflags=nodocs $INSTALL_PKGS && \
     rpm -V $INSTALL_PKGS && \
