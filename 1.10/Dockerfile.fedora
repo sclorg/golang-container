@@ -2,7 +2,6 @@ FROM registry.fedoraproject.org/f28/s2i-base:latest
 
 ENV NAME=golang \
     VERSION=1.10 \
-    RELEASE=1 \
     ARCH=x86_64
 
 ENV SUMMARY="Platform for building and running Go $VERSION based applications" \
@@ -19,7 +18,6 @@ LABEL summary="$SUMMARY" \
       com.redhat.component="$NAME" \
       name="$FGC/$NAME" \
       version="$VERSION" \
-      release="$RELEASE.$DISTTAG" \
       architecture="$ARCH" \
       maintainer="Jakub Čajka <jcajka@redhat.com>" \
       usage="docker run $FGC/$NAME"
