@@ -1,10 +1,11 @@
-Golang s2i Docker image
+Golang s2i container image
 ===================
 
 This repository contains the source for building various versions of
-the Go application as a reproducible s2i Docker image.
-Users can choose between RHEL and CentOS based builder images.
-The resulting image can be run using [Docker](http://docker.io) or using [source-to-image](https://github.com/openshift/source-to-image/).
+the Go application as a reproducible s2i container image.
+Users can choose between RHEL, Fedora and CentOS based builder images.
+The resulting image can be run using [podman](https://github.com/containers/libpod), [Docker](http://docker.io) or using [source-to-image](https://github.com/openshift/source-to-image/).
+Also the whole pipeline from build to app deployment could be run on top of the [Openshift Origin](https://www.okd.io/) or [Red Hat's Openshift](https://www.openshift.com/).
 
 
 Usage
