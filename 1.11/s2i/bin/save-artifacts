@@ -1,0 +1,25 @@
+#!/bin/bash
+
+set -e
+
+TOSAVE=""
+
+if [[ -d $HOME/go/pkg ]]; then
+
+    mv $HOME/go/pkg pkg &> /dev/null
+    TOSAVE=$TOSAVE"./pkg "
+
+fi
+
+if [[ -d `go env GOCACHE` ]]; then
+
+    mv `go env GOCACHE` go-build &> /dev/null
+    TOSAVE=$TOSAVE"./go-build "
+
+fi
+
+if [[ -n "$TOSAVE" ]]; then
+
+    tar -cf - $TOSAVE
+
+fi

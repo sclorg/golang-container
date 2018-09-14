@@ -1,6 +1,6 @@
 # Include common Makefile code.
 BASE_IMAGE_NAME = golang
-VERSIONS = 1.8 1.9 1.10
+VERSIONS = 1.8 1.9 1.10 1.11
 OPENSHIFT_NAMESPACES =
 
 # HACK:  Ensure that 'git pull' for old clones doesn't cause confusion.
