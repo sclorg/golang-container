@@ -19,7 +19,7 @@ LABEL summary="$SUMMARY" \
       name="$FGC/$NAME" \
       version="$VERSION" \
       architecture="$ARCH" \
-      maintainer="Jakub Čajka <jcajka@redhat.com>" \
+      maintainer="Jakub Cajka <jcajka@fedoraproject.org>" \
       usage="docker run $FGC/$NAME"
 
 RUN INSTALL_PKGS="golang" && \

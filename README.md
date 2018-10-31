@@ -37,5 +37,5 @@ Usage
 ---------------------------------
 
 For information about usage of Dockerfile for Golang Toolset 7 and Fedora golang,
-see usage documentation for respective Go versions [Go1.8](1.8/README.md) [Go1.9](1.9/README.md) [Go1.10](1.10/README.md).
+see usage documentation for respective Go versions [Go1.8](1.8/README.md) [Go1.9](1.9/README.md) [Go1.10](1.10/README.md) [Go1.11](1.11/README.md).
 
