@@ -19,6 +19,7 @@ Golang versions currently provided are:
 * [Golang 1.8 (go-toolset 7, where applicable)](1.8)
 * [Golang 1.9](1.9)
 * [Golang 1.10](1.10)
+* [Golang 1.11](1.11)
 
 RHEL versions currently supported are:
 * RHEL7
@@ -27,9 +28,9 @@ CentOS versions currently supported are:
 * CentOS7
 
 Fedora versions currently supported are:
-* Fedora 26
 * Fedora 27
 * Fedora 28
+* Fedora 29
 
 
 Usage
