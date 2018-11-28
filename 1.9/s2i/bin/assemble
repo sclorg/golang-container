@@ -15,7 +15,7 @@ if [[ `go list -f {{.Incomplete}}` == "true" || ! -z "$IMPORT_URL" ]]; then
         echo "Assembling GOPATH"
 
         export GOPATH=`realpath $HOME/go`
-
+        export PATH=$PATH:$GOPATH/bin
         mkdir -p $GOPATH/src/$IMPORT_URL
 
         mv /tmp/src/* $GOPATH/src/$IMPORT_URL
@@ -36,8 +36,18 @@ if [[ `go list -f {{.Incomplete}}` == "true" || ! -z "$IMPORT_URL" ]]; then
 
             pushd $GOPATH/src/$INSTALL_URL
 
-            go get
-
+            if [ -f "./Gopkg.toml" ]
+            then
+                echo "---> Using golang dep manager (dep is a prototype dependency management tool)"
+                echo "---> Downloading golang dep manager from github.com/golang/dep ..."
+                go get -u github.com/golang/dep/cmd/dep
+                echo "---> Downloading dependencies (running 'dep ensure') ..."
+                dep ensure -v
+            else
+                echo "---> Using 'go get' to download dependencies"
+                echo "---> Downloading dependencies..."
+                go get -v
+            fi
             popd
 
         fi
