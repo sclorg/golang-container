@@ -4,6 +4,11 @@ set -e
 
 pushd /tmp/src
 
+# try infer the package that we are building from the module file if we don't know it already
+if [[ -z "$IMPORT_URL" && -f /tmp/src/go.mod ]]; then
+    IMPORT_URL=`head -1 go.mod|cut -d ' ' -f2`
+fi
+
 if [[ `go list -f {{.Incomplete}}` == "true" || ! -z "$IMPORT_URL"  ]]; then
 
     INSTALL_URL=${INSTALL_URL:-$IMPORT_URL}

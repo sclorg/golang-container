@@ -1,0 +1,2 @@
+#!/bin/bash
+s2i build ${s2i_args} file://./app ${IMAGE_NAME} ${IMAGE_NAME}-testapp
