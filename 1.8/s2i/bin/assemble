@@ -58,6 +58,7 @@ if [[ `go list -f {{.Incomplete}}` == "true" || ! -z "$IMPORT_URL"  ]]; then
 
     fi
 
+    echo "ERROR: Package is missing dependencies and IMPORT_URL inference failed. Set IMPORT_URL env var."
     exec /$STI_SCRIPTS_PATH/usage
 
 else
