@@ -25,3 +25,6 @@ coverage.xml
 # Translations
 *.mo
 *.pot
+
+#macOS
+.DS_Store
