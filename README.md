@@ -20,6 +20,7 @@ Golang versions currently provided are:
 * [Golang 1.9](1.9)
 * [Golang 1.10](1.10)
 * [Golang 1.11](1.11)
+* [Golang 1.11](1.12)
 
 RHEL versions currently supported are:
 * RHEL7
@@ -31,6 +32,7 @@ Fedora versions currently supported are:
 * Fedora 27
 * Fedora 28
 * Fedora 29
+* Fedora 30
 
 
 Usage
