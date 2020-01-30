@@ -16,28 +16,28 @@ if [[ `go list -f {{.Incomplete}}` == "true" || ! -z "$IMPORT_URL" ]]; then
 
         export GOPATH=`realpath $HOME/go`
 
-        mkdir -p $GOPATH/src/$IMPORT_URL
+        mkdir -p "$GOPATH/src/$IMPORT_URL"
 
-        mv /tmp/src/* $GOPATH/src/$IMPORT_URL
+        mv "/tmp/src/*" "$GOPATH/src/$IMPORT_URL"
 
-        if [[ -d /tmp/artifacts/pkg || -d /tmp/artifacts/go-build ]]; then
+        if [[ -d "/tmp/artifacts/pkg" ]] || [[ -d "/tmp/artifacts/go-build" ]]; then
 
             echo "Restoring previous build artifacts"
 
-            mv /tmp/artifacts/pkg $GOPATH
+            mv "/tmp/artifacts/pkg" "$GOPATH"
             GOCACHE=`go env GOCACHE`
-            mkdir -p $GOCACHE
-            mv /tmp/artifacts/go-build $GOCACHE
+            mkdir -p "$GOCACHE"
+            mv /tmp/artifacts/go-build "$GOCACHE"
 
         fi
 
         # Resolve dependencies, ignore if vendor present
 
-        if [[ ! -d $GOPATH/src/$INSTALL_URL/vendor && `go list -f {{.Incomplete}} $INSTALL_URL` == "true" ]]; then
+        if [[ ! -d "$GOPATH/src/$INSTALL_URL/vendor" ]] && [[ `go list -f {{.Incomplete}} "$INSTALL_URL"` == "true" ]]; then
 
             echo "Resolving dependencies"
 
-            pushd $GOPATH/src/$INSTALL_URL
+            pushd "$GOPATH/src/$INSTALL_URL"
 
             go get
 
@@ -47,13 +47,13 @@ if [[ `go list -f {{.Incomplete}}` == "true" || ! -z "$IMPORT_URL" ]]; then
 
         # lets build
 
-        pushd $GOPATH/src/$INSTALL_URL
+        pushd "$GOPATH/src/$INSTALL_URL"
 
         echo "Building"
 
-        go install $INSTALL_URL
+        go install "$INSTALL_URL"
 
-        mv $GOPATH/bin/* /opt/app-root/gobinary
+        mv "$GOPATH/bin/*" /opt/app-root/gobinary
 
         popd
 
@@ -62,7 +62,7 @@ if [[ `go list -f {{.Incomplete}}` == "true" || ! -z "$IMPORT_URL" ]]; then
     fi
 
     echo "ERROR: Package is missing dependencies and IMPORT_URL inference failed. Set IMPORT_URL env var."
-    exec /$STI_SCRIPTS_PATH/usage
+    exec "/$STI_SCRIPTS_PATH/usage"
 
 else
 
