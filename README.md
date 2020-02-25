@@ -17,6 +17,9 @@ Versions
 ---------------
 Golang versions currently provided are:
 * [Golang 1.8 (go-toolset 7, where applicable)](1.8)
+* [Golang 1.9](1.9)
+* [Golang 1.10](1.10)
+* [Golang 1.11](1.11)
 * [Golang 1.12](1.12)
 
 RHEL versions currently supported are:
