@@ -18,7 +18,8 @@ if [[ `go list -f {{.Incomplete}}` == "true" || ! -z "$IMPORT_URL" ]]; then
 
         mkdir -p "$GOPATH/src/$IMPORT_URL"
 
-        mv "/tmp/src/*" "$GOPATH/src/$IMPORT_URL"
+        shopt -s dotglob
+        mv /tmp/src/* "$GOPATH/src/$IMPORT_URL"
 
         if [[ -d "/tmp/artifacts/pkg" ]] || [[ -d "/tmp/artifacts/go-build" ]]; then
 
