@@ -6,13 +6,22 @@
 # IMAGE_NAME specifies a name of the candidate image used for testing.
 # The image has to be available before this script is executed.
 #
+
 export IMAGE_NAME=${IMAGE_NAME:-centos/go-toolset-7-centos7}
+
+test -n $IMAGE_NAME \
+  -a -n $VERSION
 
 declare -a TEST_APPS=({simple,import-with-vendor,import-without-vendor,complete}-app)
 
+s2i_args="--pull-policy=never "
+
 # TODO: Make command compatible for Mac users
-test_dir="$(readlink -zf $(dirname "${BASH_SOURCE[0]}"))"
-image_dir=$(readlink -zf ${test_dir}/..)
+test_dir="$(readlink -f $(dirname "${BASH_SOURCE[0]}"))"
+image_dir=$(readlink -f ${test_dir}/..)
+cid_file=$(mktemp -u --suffix=.cid)
+
+source "${test_dir}/test-lib.sh"
 
 info() {
   echo -e "\n\e[1m[INFO] $@\e[0m\n"
@@ -32,9 +41,7 @@ container_ip() {
 
 run_s2i_build() {
   info "Building the ${1} application image ..."
-  pushd ${test_dir}/${1} >/dev/null
-  ./s2i-build
-  popd
+  ct_s2i_build_as_df file://${test_dir}/${1}/app ${IMAGE_NAME} ${IMAGE_NAME}-testapp ${s2i_args} ${2} $(ct_build_s2i_npm_variables)
 }
 
 incremental_test_clean_up(){
@@ -45,9 +52,9 @@ incremental_test_clean_up(){
 run_s2i_build_incremental(){
   info "Building the ${1} application image using incremental build ..."
 
-  pushd ${test_dir}/${1} >/dev/null
-  ./s2i-build-incremental &>run1
-  ./s2i-build-incremental &>run2
+  npm_variables=$(ct_build_s2i_npm_variables)
+  ct_s2i_build_as_df file://${test_dir}/${1}/app ${IMAGE_NAME} ${IMAGE_NAME}-testapp ${s2i_args} ${2} ${npm_variables} --incremental &>run1
+  ct_s2i_build_as_df file://${test_dir}/${1}/app ${IMAGE_NAME} ${IMAGE_NAME}-testapp ${s2i_args} ${2} ${npm_variables} --incremental &>run2
   if grep "Clean build will be performed because of error saving previous build artifacts" run2; then
     cat run2
     info "Incremental build, artifact injection failed..."
@@ -63,8 +70,6 @@ run_s2i_build_incremental(){
   fi
 
   incremental_test_clean_up
-
-  popd
 }
 
 prepare() {
@@ -130,12 +135,12 @@ wait_for_cid() {
 
 test_s2i_usage() {
   info "Testing 's2i usage' ..."
-  s2i usage ${s2i_args} ${IMAGE_NAME}
+  ct_s2i_usage ${IMAGE_NAME} ${s2i_args} &>/dev/null
 }
 
 test_docker_run_usage() {
   info "Testing 'docker run' usage ..."
-  docker run ${IMAGE_NAME}
+  docker run --rm ${IMAGE_NAME} &>/dev/null
 }
 
 test_scl_usage() {
@@ -177,26 +182,34 @@ test_application() {
 
 # Since we built the candidate image locally, we don't want S2I attempt to pull
 # it from Docker hub
-export s2i_args="-p never --incremental-pull-policy=never"
 
 # determine what version of the Go are we testing base on the dir we are in
 export EXPECTED_VER="go`pwd | awk -F "/" '{print $(NF)}'`"
 
 # Verify the 'usage' script is working properly when running the base image with 's2i usage ...'
 info "Testing image ${IMAGE_NAME} with go version ${EXPECTED_VER} "
-test_s2i_usage
-check_result $?
-
-# Verify the 'usage' script is working properly when running the base image with 'docker run ...'
-test_docker_run_usage
-check_result $?
 
 for app in ${TEST_APPS[@]}; do
-  prepare ${app}
-  run_s2i_build ${app}
-  if [ -e ${test_dir}/${app}/s2i-build-incremental ]; then
-    run_s2i_build_incremental ${app}
+  if [ x"${app}" == "xcomplete-app" ]; then
+    import_url="-e IMPORT_URL=${app}"
+  elif [ x"${app}" == "xsimple-app" ]; then
+    import_url=""
+  else
+    import_url="-e IMPORT_URL='github.com/cpuguy83/go-md2man'"
   fi
+  prepare ${app}
+  run_s2i_build ${app} "${import_url}"
+  check_result $?
+  if [ x"${app}" != "xsimple-app" ]; then
+    run_s2i_build_incremental ${app} "${import_url}"
+    check_result $?
+  fi
+
+  test_s2i_usage
+  check_result $?
+
+  # Verify the 'usage' script is working properly when running the base image with 'docker run ...'
+  test_docker_run_usage
   check_result $?
 
   # test application with default user

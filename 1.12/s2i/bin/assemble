@@ -19,6 +19,7 @@ if [[ `go list -f {{.Incomplete}}` == "true" || ! -z "$IMPORT_URL" ]]; then
         mkdir -p "$GOPATH/src/$IMPORT_URL"
 
         shopt -s dotglob
+
         mv /tmp/src/* "$GOPATH/src/$IMPORT_URL"
 
         if [[ -d "/tmp/artifacts/pkg" ]] || [[ -d "/tmp/artifacts/go-build" ]]; then
@@ -54,7 +55,7 @@ if [[ `go list -f {{.Incomplete}}` == "true" || ! -z "$IMPORT_URL" ]]; then
 
         go install "$INSTALL_URL"
 
-        mv "$GOPATH/bin/*" /opt/app-root/gobinary
+        mv $GOPATH/bin/* /opt/app-root/gobinary
 
         popd
 
