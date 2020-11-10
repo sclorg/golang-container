@@ -8,7 +8,7 @@
 #
 export IMAGE_NAME=${IMAGE_NAME:-centos/go-toolset-7-centos7}
 
-declare -a TEST_APPS=({simple,import-with-vendor,import-without-vendor,complete}-app)
+declare -a TEST_APPS=({simple,import-with-vendor,import-without-vendor,complete,module-with-vendor,module-without-vendor}-app)
 
 # TODO: Make command compatible for Mac users
 test_dir="$(readlink -zf $(dirname "${BASH_SOURCE[0]}"))"
