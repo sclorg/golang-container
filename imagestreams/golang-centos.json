@@ -59,7 +59,7 @@
                 },
                 "from": {
                     "kind": "DockerImage",
-                    "name": "registry.access.redhat.com/ubi8/go-toolset:1.17.7"
+                    "name": "registry.access.redhat.com/ubi8/go-toolset:1.17.10"
                 },
                 "name": "1.17-ubi8",
                 "referencePolicy": {
@@ -78,7 +78,7 @@
                 },
                 "from": {
                     "kind": "DockerImage",
-                    "name": "registry.access.redhat.com/ubi7/go-toolset:1.17.7"
+                    "name": "registry.access.redhat.com/ubi7/go-toolset:1.17.10"
                 },
                 "name": "1.17-ubi7",
                 "referencePolicy": {
