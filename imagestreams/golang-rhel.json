@@ -11,6 +11,44 @@
         "tags": [
             {
                 "annotations": {
+                  "description": "Build and run Go applications on UBI 9. For more information about using this builder image, including OpenShift considerations, see https://github.com/sclorg/golang-container/blob/master/README.md.",
+                  "iconClass": "icon-go-gopher",
+                  "openshift.io/display-name": "Go 1.20 (UBI 9)",
+                  "openshift.io/provider-display-name": "Red Hat, Inc.",
+                  "sampleRepo": "https://github.com/sclorg/golang-ex.git",
+                  "supports": "golang",
+                  "tags": "builder,golang,go"
+                },
+                "from": {
+                    "kind": "DockerImage",
+                    "name": "registry.redhat.io/ubi9/go-toolset:1.20"
+                },
+                "name": "1.20-ubi9",
+                "referencePolicy": {
+                    "type": "Local"
+                }
+            },
+            {
+                "annotations": {
+                  "description": "Build and run Go applications on UBI 9. For more information about using this builder image, including OpenShift considerations, see https://github.com/sclorg/golang-container/blob/master/README.md.",
+                  "iconClass": "icon-go-gopher",
+                  "openshift.io/display-name": "Go 1.19 (UBI 9)",
+                  "openshift.io/provider-display-name": "Red Hat, Inc.",
+                  "sampleRepo": "https://github.com/sclorg/golang-ex.git",
+                  "supports": "golang",
+                  "tags": "builder,golang,go"
+                },
+                "from": {
+                    "kind": "DockerImage",
+                    "name": "registry.redhat.io/ubi9/go-toolset:1.19"
+                },
+                "name": "1.19-ubi9",
+                "referencePolicy": {
+                    "type": "Local"
+                }
+            },
+            {
+                "annotations": {
                     "description": "Build and run Go applications on UBI. For more information about using this builder image, including OpenShift considerations, see https://github.com/sclorg/golang-container/blob/master/README.md.\n\nWARNING: By selecting this tag, your application will automatically update to use the latest version of Go available on OpenShift, including major version updates.",
                     "iconClass": "icon-go-gopher",
                     "openshift.io/display-name": "Go (Latest)",
@@ -21,7 +59,7 @@
                 },
                 "from": {
                     "kind": "ImageStreamTag",
-                    "name": "1.18-ubi8"
+                    "name": "1.20-ubi9"
                 },
                 "name": "latest",
                 "referencePolicy": {
